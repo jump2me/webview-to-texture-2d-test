@@ -8,12 +8,11 @@ public class test : MonoBehaviour {
 	public Canvas canvas;
 	public CanvasScaler canvasScaler;
 
-	WebViewObject webView;
+	public WebViewObject google;
 
 	void Awake()
 	{
-		webView = gameObject.AddComponent<WebViewObject> ();
-		webView.Init (e => Debug.Log (e));
+		google.Init (e => Debug.Log (e));
 
 		var scale = Screen.width / canvasScaler.referenceResolution.x;
 	
@@ -32,9 +31,9 @@ public class test : MonoBehaviour {
 		var top = (int)((Screen.height - (y + height / 2f)) - Screen.height / 2f);
 		var bottom = (int)((Screen.height - top) - height);
 
-		webView.SetMargins (xSign ? right : left, ySign ? top : bottom, xSign ? left : right, ySign ? bottom : top);
-		webView.LoadURL ("http://www.google.com");
-		webView.SetVisibility (true);
+		google.SetMargins (xSign ? right : left, ySign ? top : bottom, xSign ? left : right, ySign ? bottom : top);
+		google.LoadURL ("http://www.google.com");
+		google.SetVisibility (true);
 	}
 
 	void OpenWebView (CanvasScaler canvasScaler, RectTransform guide, string url)
@@ -45,10 +44,10 @@ public class test : MonoBehaviour {
 	public Image img;
 	void Update()
 	{
-		if (webView == null)
+		if (google == null)
 			return;
 
-		var texture = webView.Texture;
+		var texture = google.Texture;
 		if (texture == null)
 			return;
 

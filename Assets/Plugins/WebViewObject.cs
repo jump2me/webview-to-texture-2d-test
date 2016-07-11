@@ -24,6 +24,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using UnityEngine.EventSystems;
 #if UNITY_EDITOR || UNITY_STANDALONE_OSX
 using System.IO;
 using System.Text.RegularExpressions;
@@ -43,8 +44,21 @@ public class UnitySendMessageDispatcher
 }
 #endif
 
-public class WebViewObject : MonoBehaviour
+public class WebViewObject : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+
+	bool isPointerEntered;
+
+	public void OnPointerExit (PointerEventData eventData)
+	{
+		isPointerEntered = false;
+	}
+
+	public void OnPointerEnter (PointerEventData eventData)
+	{
+		isPointerEntered = true;
+	}
+
     Callback onJS;
     Callback onError;
     bool visibility;
@@ -339,7 +353,9 @@ public class WebViewObject : MonoBehaviour
         bool down = Input.GetButton("Fire1");
         bool press = Input.GetButtonDown("Fire1");
         bool release = Input.GetButtonUp("Fire1");
-        float deltaY = Input.GetAxis("Mouse ScrollWheel");
+        //float deltaY = Input.GetAxis("Mouse ScrollWheel");
+		float deltaY = isPointerEntered ? Input.GetAxis("Mouse ScrollWheel") : 0;
+
         bool keyPress = false;
         string keyChars = "";
         short keyCode = 0;
