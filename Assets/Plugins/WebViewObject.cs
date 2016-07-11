@@ -51,7 +51,7 @@ public class WebViewObject : MonoBehaviour
 #if UNITY_EDITOR || UNITY_STANDALONE_OSX
     IntPtr webView;
     Rect rect;
-    Texture2D texture;
+	public Texture2D Texture { get; private set; }
     string inputString;
     bool hasFocus;
 #elif UNITY_IPHONE
@@ -330,12 +330,7 @@ public class WebViewObject : MonoBehaviour
         }
     }
 
-	public Texture2D GetTexture()
-	{
-		return texture;
-	}
-
-    void OnGUI()
+    void FixedUpdate()
     {
         if (webView == IntPtr.Zero || !visibility)
             return;
@@ -360,25 +355,20 @@ public class WebViewObject : MonoBehaviour
         {
             var w = _CWebViewPlugin_BitmapWidth(webView);
             var h = _CWebViewPlugin_BitmapHeight(webView);
-            if (texture == null || texture.width != w || texture.height != h) {
-                texture = new Texture2D(w, h, TextureFormat.RGBA32, false, true);
-                texture.filterMode = FilterMode.Bilinear;
-                texture.wrapMode = TextureWrapMode.Clamp;
+            if (Texture == null || Texture.width != w || Texture.height != h) {
+                Texture = new Texture2D(w, h, TextureFormat.RGBA32, false, true);
+                Texture.filterMode = FilterMode.Bilinear;
+                Texture.wrapMode = TextureWrapMode.Clamp;
             }
         }
-        _CWebViewPlugin_SetTextureId(webView, (int)texture.GetNativeTexturePtr());
+        _CWebViewPlugin_SetTextureId(webView, (int)Texture.GetNativeTexturePtr());
         _CWebViewPlugin_SetCurrentInstance(webView);
-		texture.Apply ();
+		Texture.Apply ();
 #if UNITY_4_6 || UNITY_5_0 || UNITY_5_1
         GL.IssuePluginEvent(-1);
 #else
         GL.IssuePluginEvent(GetRenderEventFunc(), -1);
 #endif
-//        Matrix4x4 m = GUI.matrix;
-//        GUI.matrix = Matrix4x4.TRS(new Vector3(0, Screen.height, 0),
-//            Quaternion.identity, new Vector3(1, -1, 1));
-//        GUI.DrawTexture(rect, texture);
-//        GUI.matrix = m;
     }
 #endif
 }

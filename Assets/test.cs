@@ -48,7 +48,7 @@ public class test : MonoBehaviour {
 		if (webView == null)
 			return;
 
-		var texture = webView.GetTexture ();
+		var texture = webView.Texture;
 		if (texture == null)
 			return;
 
